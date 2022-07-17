@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>SKY</title>
+    
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <!-- 요기는 구글 머티리얼 아이콘 -->
+    <link
+    href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp"
+    rel="stylesheet">
+    <style>
+        .main_body {
+            display: flex;
+            justify-content: center;
+            padding-top: 50px;
+        }
+
+        .left_body {
+            background-color: skyblue;
+            margin-right: 500px;
+            width: 500px;
+            height: 2000px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .right_body {
+            background-color: yellow;
+            width: 300px;
+            height: 1000px;
+            left: 52%;
+            position: fixed
+        }
+
+        .feed_box {
+            background-color: white;
+            width: 480px;
+            margin: 10px;
+            min-height: auto;
+        }
+
+        .feed_img{
+            width: 100%;
+            object-fit: contain;
+        }   
+        .feed_content{
+            padding: 0px 10px;
+        }
+
+        .feed_like{
+            padding: 0px 10px;
+        }
+
+        .feed_reply{
+            padding: 0px 10px;
+            display: flex;
+            flex-direction: column;
+        }
+        .feed_txt{
+            font-size: 14px;
+        }
+
+        .feed_icon{
+            padding: 5px 5px 0px 5px;
+            display: flex;
+            justify-content: space-between;
+        }span{
+            padding-right: 5px;
+        }
+
+        .feed_name{
+            padding: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .feed_name_txt{
+            font-size: 14px;
+            padding: 0px 10px;
+            font-weight: bold;
+        }
+
+        .profile_box {
+            width: 40px;
+            height: 40px;
+            border-radius: 70%;
+            overflow: hidden;
+        }
+        .profile_img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .box {
+            width: 150px;
+            height: 150px;
+            border-radius: 70%;
+            overflow: hidden;
+        }
+
+        .profile {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .modal_overlay {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(1.5px);
+            -webkit-backdrop-filter: blur(1.5px);
+            z-index: 10000;
+        }
+
+        .modal_window {
+            background: white;
+            backdrop-filter: blur(13.5px);
+            -webkit-backdrop-filter: blur(13.5px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            width: 800px;
+            height: 600px;
+            position: relative;
+            padding: 10px;
+        }
+    </style>
+
+  </head>
+  <body>
+    <div id="header">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light" style="width: 100%;height: 50px;position: fixed;">
+            <div class="container-fluid">
+                <!-- object-fit을 contain으로 하면 가로 세로 비율을 맞춰서 자동으로 크기를 조절-->
+                <img style="height:30px; object-fit: contain"  src="https://www.instagram.com/static/images/web/mobile_nav_type_logo-2x.png/1b47f9d0e595.png">
+                <input class="form-control" style="width: 200px" type="search" placeholder="Search" aria-label="Search">
+                <div>
+                    <span class="material-icons">home</span>
+                    <span class="material-icons">send</span>
+                    <span class="material-icons-outlined">add_box</span>
+                    <span class="material-icons-outlined">explore</span>
+                    <span class="material-icons-outlined">favorite_border</span>
+                </div>    
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Link</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Dropdown
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled">Disabled</a>
+                    </li>
+                    </ul>
+                    <form class="d-flex">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+                </div>
+            </div>
+        </nav>    
+    </div>
+
+    <!-- 바디 영역 -->
+    <div class="main_body">
+        <div class="left_body">
+            <div class="feed_name">
+                <div class="profile_box">
+                  <img class="profile_img" src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FkI5it%2FbtqN5f2Bcwh%2FRStkkuVMvgHc9xWqV4tIY0%2Fimg.png">
+                </div>
+                <span class="feed_name_txt"> jin.99 </span>
+              </div>
+
+            <div class="border feed_box">
+              <img class="feed_img "
+                   src="https://mblogthumb-phinf.pstatic.net/MjAxNzA2MTFfMjc1/MDAxNDk3MTcyMDgyNzEw.ID5RyHWKvsVEW2NS9EQGyRYX7vUaXr7znQeuTrRRmdIg.gK7MD7VhNJPkV4_dueiWer2y-oH7NAAmEklF-6bbYyQg.JPEG.jejubyeol/%EC%97%AC%EB%A6%84%EC%97%90_%EC%A0%9C%EC%A3%BC%EB%8F%84_%EC%82%AC%EC%A7%84%EC%B0%8D%EA%B8%B0_%EC%A2%8B%EC%9D%80%EA%B3%B3.jpg?type=w800">
+              <div class="feed_icon">
+                <div>
+                  <span class="material-icons-outlined">
+                    favorite_border
+                  </span>
+                  <span class="material-icons-outlined">
+                    mode_comment
+                  </span>
+                  <span class="material-icons-outlined">
+                    send
+                  </span>
+                </div>
+                <div>
+                  <span class="material-icons-outlined">
+                    turned_in_not
+                  </span>
+                </div>
+              </div>
+              <div class="feed_like">
+                <p class="feed_txt"> <b>좋아요 10개</b></p>
+              </div>
+              <div class="feed_content">
+                <p class="feed_txt"> <b> jin.99 </b> 코로나라서 해외여행을 못가니 최근 제주도 가는사람이 늘고있습니다~ 제주도도 조심해야되는건 마찬가지~!</p>
+              </div>
+              <div class="feed_reply">
+                <span class="feed_txt"> <b> mychew </b> 제주도 가고 싶어요 ㅠㅠ</span>
+                <span class="feed_txt"> <b> cho </b> 제주도  ㄱ ㄱ </span>
+              </div>
+            </div>
+          </div>
+        <div class="right_body">
+        오른쪽화면
+        </div >
+    </div>
+
+
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+    -->
+  </body>
+</html>
