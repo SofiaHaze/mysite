@@ -1,251 +1,813 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <title>SKY</title>
-    
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+<head>
+  <title>SKY</title>
 
-    <!-- 요기는 구글 머티리얼 아이콘 -->
-    <link
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!--get_media_prefix 사용할때 이걸써야 instagram/urls.py the line을 can read-->
+  {% load static %}
+
+
+  <style>
+    .main_body {
+      background-color:white;
+      display:flex;
+      justify-content: center;
+      padding-top: 50px;
+    }
+
+    .left_body {
+      margin-right: 100px;
+      width: 600px;
+      height: 2000px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .right_body {
+      padding-top: 20px;
+      width: 300px;
+      height: 1000px;
+      left: 72%;
+      position: fixed
+    }
+
+    #header {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+
+    .feed_box {
+      background-color:white;
+      width: 500px;
+      margin: 10px;
+      min-height: auto;
+      padding-bottom: 10px;
+    }
+
+    .box {
+      width: 150px;
+      height: 150px;
+      border-radius: 70%;
+      overflow: hidden;
+    }
+
+    .profile {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .feed_img {
+      width: 100%;
+      object-fit: contain;
+    }
+
+    .feed_content {
+      padding: 0px 10px;
+    }
+
+    .feed_like {
+      padding: 0px 10px;
+    }
+
+    .feed_reply {
+      padding: 0px 10px;
+      display: flex;
+      flex-direction: column;
+    }
+
+
+    .feed_txt {
+      font-size: 14px;
+    }
+
+
+    .feed_icon {
+      padding: 5px 5px 0px 5px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    span {
+      padding-right: 5px;
+    }
+
+    .feed_name {
+      padding: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    .feed_name_txt {
+      font-size: 14px;
+      padding: 0px 10px;
+      font-weight: bold;
+    }
+
+    .profile_box {
+      width: 40px;
+      height: 40px;
+      border-radius: 70%;
+      overflow: hidden;
+    }
+
+    .profile_img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .name_content {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .name_content_txt {
+      font-size: 12px;
+      padding: 0px 10px;
+      font-weight: bold;
+      color: lightgray;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 190px;
+    }
+
+    .big_profile_box {
+      width: 60px;
+      height: 60px;
+      border-radius: 70%;
+      overflow: hidden;
+    }
+
+    .link_txt {
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .recommend_box {
+      display: flex;
+      justify-content: space-between;
+      padding: 5px;
+      font-size: 14px;
+      font-weight: bold;
+      align-items: center;
+    }
+
+    .comment_box {
+      margin: 40px 0 0 5px;
+      font-size: 12px;
+      font-weight: bold;
+      color: lightgray;
+      display: flex;
+      flex-direction: column;
+    }
+
+    @media screen and (max-width: 580px) {
+      #nav_search {
+        display: none;
+      }
+
+      .right_body {
+        display: none
+      }
+
+      .left_body {
+        margin-left: 100px
+      }
+
+      .feed_box {
+        width: 360px;
+        margin-top : 70px;
+      }
+      #nav_bar_add_box{
+        display: none;
+      }
+    }
+
+
+    @media screen and (min-width: 581px) {
+      .left_body {
+        margin-left: 30px
+      }
+      .right_body {
+        margin-top: 20px
+      }
+
+      .feed_box {
+        width: 430px;
+        margin-top :40px;
+      }
+    }
+    .modal {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(1.5px);
+      -webkit-backdrop-filter: blur(1.5px);
+    }
+
+    .modal_title {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      font-weight: bold;
+      font-size: 20px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.18);
+    }
+
+    .modal_title_side {
+      margin: 5px;
+      flex: 0 0 40px;
+      text-align: center;
+    }
+
+    .modal_image_upload {
+      outline: 2px dashed black;
+      outline-offset: -10px;
+      transition: all .15s ease-in-out;
+      width: 780px;
+      height: 540px;
+      text-align: center;
+      line-height: 548px;
+    }
+
+    .modal_image_upload_content {
+      outline: 2px dashed black;
+      outline-offset: -10px;
+      text-align: center;
+      transition: all .15s ease-in-out;
+      width: 450px;
+      height: 508px;
+    }
+
+    .modal_overlay {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(1.5px);
+      -webkit-backdrop-filter: blur(1.5px);
+    }
+
+    .modal_window {
+      background: white;
+      backdrop-filter: blur(13.5px);
+      -webkit-backdrop-filter: blur(13.5px);
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      width: 800px;
+      height: 600px;
+      position: relative;
+      padding: 10px;
+    }
+
+    .modal_image_content {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .modal_content_write {
+      display: flex;
+      flex-direction: column;
+      border-left: 1px solid rgba(0, 0, 0, 0.18);
+      ;
+    }
+
+    .feed_content_textarea {
+      resize: none;
+      width: 294px;
+      border: none;
+    }
+
+    #weather_naver{
+      border : 1px gray solid;
+      padding : 2px 7px
+    }
+  </style>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+  <!-- Google Icon -->
+  <link
     href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp"
     rel="stylesheet">
-    <style>
-        .main_body {
-            display: flex;
-            justify-content: center;
-            padding-top: 50px;
-        }
 
-        .left_body {
-            background-color: skyblue;
-            margin-right: 500px;
-            width: 500px;
-            height: 2000px;
-            display: flex;
-            flex-direction: column;
-        }
+  <!-- jquery 사용하기 위해 -->
+  <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 
-        .right_body {
-            background-color: yellow;
-            width: 300px;
-            height: 1000px;
-            left: 52%;
-            position: fixed
-        }
+  <title>Hello, world!</title>
 
-        .feed_box {
-            background-color: white;
-            width: 480px;
-            margin: 10px;
-            min-height: auto;
-        }
+</head>
 
-        .feed_img{
-            width: 100%;
-            object-fit: contain;
-        }   
-        .feed_content{
-            padding: 0px 10px;
-        }
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light" style="position: fixed;width: 100%; z-index: 999">
+    <div id="header" class="container-fluid">
+      <a class="navbar-brand" href="/main"><img style="width: 100px"
+          src="https://www.instagram.com/static/images/web/mobile_nav_type_logo-2x.png/1b47f9d0e595.png">
+      </a>
+      <input id="nav_search" class="form-control me-2" style="width: 300px" type="search" placeholder="Search"
+        aria-label="Search">
 
-        .feed_like{
-            padding: 0px 10px;
-        }
 
-        .feed_reply{
-            padding: 0px 10px;
-            display: flex;
-            flex-direction: column;
-        }
-        .feed_txt{
-            font-size: 14px;
-        }
+      <div id="weather_naver">
+           {{user.user_id}}
+      </div>
 
-        .feed_icon{
-            padding: 5px 5px 0px 5px;
-            display: flex;
-            justify-content: space-between;
-        }span{
-            padding-right: 5px;
-        }
+      <div style="display:flex">
+        <a href="/main" style="color: black"><span class="material-icons" style="padding-right: 10px"> home</span></a>
 
-        .feed_name{
-            padding: 10px;
-            display: flex;
-            align-items: center;
-        }
+        <span id="nav_bar_send" class="material-icons-outlined">send</span>
 
-        .feed_name_txt{
-            font-size: 14px;
-            padding: 0px 10px;
-            font-weight: bold;
-        }
+        <span id="nav_bar_add_box" class="material-icons-outlined" style="padding-right: 10px">add_box</span>
+        <span class="material-icons-outlined">explorer</span>
 
-        .profile_box {
-            width: 40px;
-            height: 40px;
-            border-radius: 70%;
-            overflow: hidden;
-        }
-        .profile_img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        <!--<div id="weather_naver">
+          <a href="/content/weather_naver">Weather : {{result}}</a>
+        </div>-->
+        <span class="material-icons-outlined">favorite_border</span>
+        <div class="dropdown">
+          <a href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+            <div class="box" style="width: 25px; height: 25px">
 
-        .box {
-            width: 150px;
-            height: 150px;
-            border-radius: 70%;
-            overflow: hidden;
-        }
+              <img class="profile" src="{% get_media_prefix %}{{ user.profile_image }}">
 
-        .profile {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .modal_overlay {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            left: 0;
-            top: 0;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(1.5px);
-            -webkit-backdrop-filter: blur(1.5px);
-            z-index: 10000;
-        }
-
-        .modal_window {
-            background: white;
-            backdrop-filter: blur(13.5px);
-            -webkit-backdrop-filter: blur(13.5px);
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            width: 800px;
-            height: 600px;
-            position: relative;
-            padding: 10px;
-        }
-    </style>
-
-  </head>
-  <body>
-    <div id="header">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light" style="width: 100%;height: 50px;position: fixed;">
-            <div class="container-fluid">
-                <!-- object-fit을 contain으로 하면 가로 세로 비율을 맞춰서 자동으로 크기를 조절-->
-                <img style="height:30px; object-fit: contain"  src="https://www.instagram.com/static/images/web/mobile_nav_type_logo-2x.png/1b47f9d0e595.png">
-                <input class="form-control" style="width: 200px" type="search" placeholder="Search" aria-label="Search">
-                <div>
-                    <span class="material-icons">home</span>
-                    <span class="material-icons">send</span>
-                    <span class="material-icons-outlined">add_box</span>
-                    <span class="material-icons-outlined">explore</span>
-                    <span class="material-icons-outlined">favorite_border</span>
-                </div>    
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Link</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Dropdown
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#">Action</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled">Disabled</a>
-                    </li>
-                    </ul>
-                    <form class="d-flex">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                    </form>
-                </div>
             </div>
-        </nav>    
-    </div>
+          </a>
 
-    <!-- 바디 영역 -->
-    <div class="main_body">
-        <div class="left_body">
-            <div class="feed_name">
-                <div class="profile_box">
-                  <img class="profile_img" src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FkI5it%2FbtqN5f2Bcwh%2FRStkkuVMvgHc9xWqV4tIY0%2Fimg.png">
-                </div>
-                <span class="feed_name_txt"> jin.99 </span>
-              </div>
+          <ul class="dropdown-menu" style="left:-138px" aria-labelledby="dropdownMenuLink">
+            <li><input type="file" id="fileUpload" accept='image/*' /></li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" href="/content/profile">프로필</a></li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" href="/user/logout">로그아웃</a></li>
+          </ul>
+        </div>
+      </div>
+    </div><!--end of header-->
+  </nav>
 
-            <div class="border feed_box">
-              <img class="feed_img "
-                   src="https://mblogthumb-phinf.pstatic.net/MjAxNzA2MTFfMjc1/MDAxNDk3MTcyMDgyNzEw.ID5RyHWKvsVEW2NS9EQGyRYX7vUaXr7znQeuTrRRmdIg.gK7MD7VhNJPkV4_dueiWer2y-oH7NAAmEklF-6bbYyQg.JPEG.jejubyeol/%EC%97%AC%EB%A6%84%EC%97%90_%EC%A0%9C%EC%A3%BC%EB%8F%84_%EC%82%AC%EC%A7%84%EC%B0%8D%EA%B8%B0_%EC%A2%8B%EC%9D%80%EA%B3%B3.jpg?type=w800">
-              <div class="feed_icon">
-                <div>
-                  <span class="material-icons-outlined">
-                    favorite_border
-                  </span>
-                  <span class="material-icons-outlined">
-                    mode_comment
-                  </span>
-                  <span class="material-icons-outlined">
-                    send
-                  </span>
-                </div>
-                <div>
-                  <span class="material-icons-outlined">
-                    turned_in_not
-                  </span>
-                </div>
-              </div>
-              <div class="feed_like">
-                <p class="feed_txt"> <b>좋아요 10개</b></p>
-              </div>
-              <div class="feed_content">
-                <p class="feed_txt"> <b> jin.99 </b> 코로나라서 해외여행을 못가니 최근 제주도 가는사람이 늘고있습니다~ 제주도도 조심해야되는건 마찬가지~!</p>
-              </div>
-              <div class="feed_reply">
-                <span class="feed_txt"> <b> mychew </b> 제주도 가고 싶어요 ㅠㅠ</span>
-                <span class="feed_txt"> <b> cho </b> 제주도  ㄱ ㄱ </span>
-              </div>
+  <!-- 바디 영역 -->
+  <div class="main_body">
+    <div class="left_body">
+
+      <!-- 여기서부터 피드박스 -->
+      {% for feed in feeds %}
+      <div class="feed_box">
+        <!--flex-direction:row   : -->
+        <div style="display: flex;flex-direction: row; align-items: center; margin: 10px">
+          <div class="box" style="width: 35px; height: 35px">
+            <img class="profile" src="{% get_media_prefix %}{{ feed.profile_image }}">
+          </div>
+          <div>
+            <span class="feed_name_txt"> {{ feed.nickname}} </span>
+          </div>
+        </div>
+
+        <div><img style="width: 100%" src="{% get_media_prefix %}{{ feed.image }}">
+        </div>
+        <div style="margin: 0 20px;display: flex; flex-direction: row; justify-content: space-between">
+          <div>
+            <span id="favorite_{{ feed.id }}" feed_id="{{ feed.id }}" class="favorite material-icons-outlined"
+              style="color: red;cursor: pointer">{% if feed.is_liked %}
+              favorite{% else %}favorite_border{% endif %}</span>
+          </div>
+          <div>
+            <span id="bookmark_{{ feed.id }}" feed_id="{{ feed.id }}" class="bookmark material-icons-outlined"
+              style="cursor: pointer">
+              {% if feed.is_marked %}
+              bookmark
+              {% else %}
+              bookmark_border
+              {% endif %}
+            </span>
+
+          </div>
+        </div>
+        <div style="margin: 0 20px;text-align: left;font-size: 14px"> 춘식이 <b>외 {{ feed.like_count }}명</b>이
+          좋아합니다.
+        </div>
+        <div style="margin: 0 20px;text-align: left;font-size: 16px">
+          <b>{{ feed.nickname }}</b> {{ feed.content }}
+        </div>
+        <div id="reply_list_{{ feed.id }}">
+          {% for reply in feed.reply_list %}
+          <div style="margin: 0 20px;text-align: left;font-size: 14px">
+            <b>{{ reply.nickname }}</b> {{ reply.reply_content }}
+          </div>
+          {% endfor %}
+        </div>
+
+
+        <div style="display:flex;flex-direction: row;align-items: center; border-top: solid 1px gray ">
+          <input id="reply_{{ feed.id }}" type="text" class="form-control"
+            style="box-shadow: none; border: none; outline: none" placeholder="댓글 달기..">
+          <div feed_id="{{ feed.id }}" class="upload_reply"
+            style="width: 50px;color: cornflowerblue; font-weight: bold">
+            게시
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+
+      <!-- 여기까지 피드박스 -->
+
+    </div> <!-- End of left body-->
+
+    <div class="right_body">
+      <div class="feed_name">
+        <div style="display: flex; align-items: center; ">
+          <div class="big_profile_box">
+            <img class="profile_img" src="{% get_media_prefix %}{{user.profile_image}}">
+          </div>
+          <div class="name_content">
+            <span class="feed_name_txt"> {{user.name}} </span>
+            <span class="name_content_txt"> {{user.user_id}}</span>
+          </div>
+        </div>
+
+        <a class="link_txt">
+          전환
+        </a>
+      </div>
+
+      <div class="recommend_box">
+        <span style="color: gray"> 회원님을 위한 추천</span>
+        <span style="font-size: 12px"> 모두 보기 </span>
+      </div>
+
+      <div>
+        <div class="feed_name" style="justify-content: space-between">
+          <div class="profile_box">
+            <img class="profile_img"
+              src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FkI5it%2FbtqN5f2Bcwh%2FRStkkuVMvgHc9xWqV4tIY0%2Fimg.png">
+          </div>
+          <div class="name_content">
+            <span class="feed_name_txt"> dation3388 </span>
+            <span class="name_content_txt"> Jinstargram 신규가입</span>
+          </div>
+          <a class="link_txt">
+            팔로우
+          </a>
+        </div>
+        <div class="feed_name" style="justify-content: space-between">
+          <div class="profile_box">
+            <img class="profile_img"
+              src="http://file3.instiz.net/data/cached_img/upload/2021/01/27/18/2ce2f41f7e9f09c0acc77faac7452dbf.jpg">
+          </div>
+          <div class="name_content">
+            <span class="feed_name_txt"> gaoudi </span>
+            <span class="name_content_txt"> IU 외 5명이 팔로우</span>
+          </div>
+          <a class="link_txt">
+            팔로우
+          </a>
+        </div>
+        <div class="feed_name" style="justify-content: space-between">
+          <div class="profile_box">
+            <img class="profile_img"
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTiCVWdogd6Ocsm08kL8ph4sb1MN0AYEiSUQ&usqp=CAU">
+          </div>
+          <div class="name_content">
+            <span class="feed_name_txt"> CAU </span>
+            <span class="name_content_txt"> IU 외 5명이 팔로우</span>
+          </div>
+          <a class="link_txt">
+            팔로우
+          </a>
+        </div>
+        <div class="feed_name" style="justify-content: space-between">
+          <div class="profile_box">
+            <img class="profile_img" src="https://pbs.twimg.com/media/EhzH0_DU4AEZ9yr.jpg">
+          </div>
+          <div class="name_content">
+            <span class="feed_name_txt"> 123456789 </span>
+            <span class="name_content_txt"> 그냥 추천해봄 </span>
+          </div>
+          <a class="link_txt">
+            팔로우
+          </a>
+        </div>
+        <div class="feed_name" style="justify-content: space-between">
+          <div class="profile_box">
+            <img class="profile_img"
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHPNYM5RQgA2F7BtpBQ-OrNFKDXVDUpypRuw&usqp=CAU">
+          </div>
+          <div class="name_content">
+            <span class="feed_name_txt"> instiz </span>
+            <span class="name_content_txt"> 애도 유명해 </span>
+          </div>
+          <a class="link_txt">
+            팔로우
+          </a>
+        </div>
+      </div>
+      <div class="comment_box">
+        <span> 인스타그램_SKY </span>
+        <span> responsive-web </span>
+        <br>
+        <span> @2022 SSC </span>
+
+      </div>
+    </div> <!-- end of right body-->
+  </div> <!--end of main body-->
+
+
+  <!-- window : White Screen, overlay : black Screen-->
+  <div id="first_modal" class="modal_overlay">
+    <div class="modal_window">
+      <div class="modal_title">
+        <div class="modal_title_side"></div>
+        <div> 새 게시물 </div>
+        <div class="modal_title_side">
+          <span class="close_modal material-icons-outlined">
+            close
+          </span>
+        </div>
+      </div>
+      <div class="modal_image_upload"> </div>
+    </div> <!-- end of modal_window-->
+  </div>
+  <!--End of first modal-->
+
+  <!-- 두번째 모달 -->
+  <div id="second_modal" class="modal_overlay">
+    <div class="modal_window">
+      <div class="modal_title">
+        <div class="modal_title_side"></div>
+        <div> 새 게시물 </div>
+        <div class="modal_title_side">
+          <span class="close_modal material-icons-outlined">
+            close
+          </span>
+        </div>
+      </div>
+
+      <div style="border-top: solid 1px gray;display: flex; flex-direction: row;margin-top: 10px">
+        <div class="modal_image_upload_content"> </div>
+        <div style="margin-left:20px;">
+
+          <div style="display: flex;flex-direction: row; align-items: center; margin: 20px">
+            <div class="box" style="width: 35px; height: 35px">
+              <img class="profile" src="{% get_media_prefix %}{{ feed.profile_image }}">
+            </div>
+            <div>
+              <span class="feed_name_txt"> {{user.user_id}} </span>
             </div>
           </div>
-        <div class="right_body">
-        오른쪽화면
-        </div >
+          <div>
+            <textarea id="input_feed_content" class="form-control" style="width: 276px; height: 400px"
+              id="exampleFormControlTextarea1" rows="5"></textarea>
+          </div>
+          <button id="feed_create_button" type="button" class="btn btn-primary" style="width: 100%">
+            공유하기
+          </button>
+        </div>
+
+      </div>
+
     </div>
+  </div>
 
 
-    <!-- Optional JavaScript; choose one of the two! -->
+  <!-- Optional JavaScript; choose one of the two! -->
+  <script>
+    //global declare
+    let files;
 
-    <!-- Option 1: Bootstrap Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-    <!-- Option 2: Separate Popper and Bootstrap JS -->
-    <!--
+    //겹치지않게 고유 식별 아이디로만 생성, 복수개는 클래스로 createe) id:#   class:.
+    $('#nav_bar_add_box').click(function () {
+      $('#first_modal').css({
+        display: 'flex'
+      });
+      $('#second_modal').css({
+        display: 'none'
+      });
+
+      //body Scroll removed
+      $(document.body).css({
+        overflow: 'hidden'
+      });
+    });
+
+    $('#nav_bar_send').click(function () {
+      alert("개발중임")
+    })
+
+    //(중요)id는 절대 같은이름으로 해선 안됨... 그럴거면 클래스로
+    $('.close_modal').click(function () {
+      $('#first_modal').css({
+        display: 'none'
+      });
+
+      $('#second_modal').css({
+        display: 'none'
+      });
+    });
+
+    $('.modal_image_upload')
+      .on("dragover", dragOver)
+      .on("dragleave", dragOver)
+      .on("drop", uploadFiles);
+
+    //e: modal
+    function dragOver(e) {
+      e.stopPropagation();
+      e.preventDefault();
+
+      //image를 업로드 영역에 드래깅된 경우
+      if (e.type == "dragover") {
+        $(e.target).css({
+          "background-color": "black",
+          "outline-offset": "-20px"
+        });
+      } else {
+        $(e.target).css({
+          "background-color": "white",
+          "outline-offset": "-10px"
+        });
+      }
+    }
+
+    function uploadFiles(e) {
+      e.stopPropagation();
+      e.preventDefault();
+
+      //파일을 가져오는 코드 2줄
+      e.dataTransfer = e.originalEvent.dataTransfer;
+      files = e.dataTransfer.files;
+      console.log(files[0].name + "is sucessfully uploaded through drop")
+
+      if (files.length > 1) {
+        alert('하나만 올려라.');
+        return;
+      }
+
+      if (files[0].type.match(/image.*/)) {
+
+        $('#first_modal').css({
+          display: 'none'
+        });
+        $('#second_modal').css({
+          display: 'flex'
+        });
+        $('.modal_image_upload_content').css({
+          "background-image": "url(" + window.URL.createObjectURL(files[0]) + ")",
+          "outline": "none",
+          "background-size": "100%",
+          "background-repeat": "no-repeat",
+          "background-position": "center"
+        });
+      } else {
+        alert('이미지가 아닙니다.');
+        return;
+      }
+
+    }
+
+
+    $('#feed_create_button').click(function () {
+      //alert("공유하기 눌렀다." + files[0].name);
+
+      //request.FILES('file')로 불러옴 얘를.ㅋs
+      let file = files[0];
+      let image = files[0].name;
+      let content = $('#input_feed_content').val();
+      let fd = new FormData();
+
+      fd.append('file', file);
+      fd.append('image', image);
+      fd.append('content', content);
+
+      if (image.length <= 0) {
+        alert("이미지가 비어있습니다.");
+      }
+      else if (content.length <= 0) {
+        alert("설명을 입력하세요");
+      }
+      else {
+        WriteFeed(fd);
+        console.log(files[0]);
+      }
+    });
+    function WriteFeed(fd) {
+
+      $.ajax({
+        //urls.py > uploadFeed executed
+        url: "/content/upload",
+        data: fd,
+        method: "POST",
+        processData: false,
+        contentType: false,
+        //call back func : success, error, complete
+        success: function (data) {
+          console.log("성공");
+        },
+        error: function (request, status, error) {
+          console.log("에러");
+        },
+        complete: function () {
+          console.log("완료");
+          location.replace("/main");
+        }
+      });
+    };
+
+
+    //mobile Upload
+    const fileInput = document.getElementById("fileUpload");
+    // 또는 const fileInput = $("#fileUpload").get(0);
+    fileInput.onchange = () => {
+      //const: 변수 재선언 불가, 변수 재할당 불가
+      const selectedFile = fileInput.files[0];
+      //let: 변수 재선언 불가, 재할당 가능
+      //var: 둘다 가능 -> 코드 많아지면 ㅉ
+      let image = fileInput.files[0].name;
+      console.log(image);
+      let content = "this is made by mobile";
+      let fd = new FormData();
+
+      fd.append('file', selectedFile);
+      fd.append('image', image);
+      fd.append('content', content);
+
+      $.ajax({
+        //urls.py > uploadFeed executed
+        url: "/content/upload",
+        data: fd,
+        method: "POST",
+        processData: false,
+        contentType: false,
+        //call back func : success, error, complete
+        success: function (data) {
+          console.log("성공");
+        },
+        error: function (request, status, error) {
+          console.log("에러");
+        },
+        complete: function () {
+          console.log("완료");
+          location.replace("/main");
+        }
+      });
+    };
+
+
+    //weather_crawling
+    const get_weather_naver = document.getElementById("weather_naver");
+    $('#weather_naver').click(function (){
+      //window.location.href='/content/weather_naver';
+      $.ajax("/content/weather_naver")
+
+      .done(function() {
+
+          alert("요청 성공");
+      })
+      .fail(function() {
+
+          alert("요청 실패");
+      })
+    });
+
+  </script>
+
+
+
+  <!-- Option 1: Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+    crossorigin="anonymous"></script>
+  <!-- Option 2: Separate Popper and Bootstrap JS -->
+  <!--
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
     -->
-  </body>
+</body>
+
 </html>
